@@ -12,7 +12,7 @@ gem install rubydns rake process-daemon envbash
 
 # download codes
 cd /usr/local/sbin
-XURL="https://github.com/comomac/lazypivpn"
+XURL="https://raw.githubusercontent.com/comomac/lazypivpn/master/"
 curl ${XURL}/dnsd.rb > dnsd.rb
 curl ${XURL}/fix-ovpn.sh > fix-ovpn.sh
 curl ${XURL}/setup_nic.sh > setup_nic.sh
