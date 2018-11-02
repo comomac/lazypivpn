@@ -7,13 +7,11 @@ fi
 
 # install necessary bits
 apt-get -y update
-apt-get -y install ruby2.3 ruby2.3-dev openvpn
-gem install rubydns rake process-daemon envbash
+apt-get -y install openvpn dnsmasq
 
 # download codes
 cd /usr/local/sbin
 XURL="https://github.com/comomac/lazypivpn"
-curl ${XURL}/dnsd.rb > dnsd.rb
 curl ${XURL}/fix-ovpn.sh > fix-ovpn.sh
 curl ${XURL}/setup_nic.sh > setup_nic.sh
 curl ${XURL}/iptables-novpn > iptables-novpn
@@ -21,7 +19,7 @@ curl ${XURL}/iptables-vpn > iptables-vpn
 curl ${XURL}/vpn-link-setup > vpn-link-setup
 
 # set executable
-chmod +x dnsd.rb fix-ovpn.sh setup_nic.sh iptables-vpn iptables-novpn vpn-link-setup
+chmod +x fix-ovpn.sh setup_nic.sh iptables-vpn iptables-novpn vpn-link-setup
 
 # download vpn providers
 mkdir -p /usr/local/lib/lazypivpn/providers
@@ -38,11 +36,16 @@ curl ${XURL}/ipnet.sh > /usr/local/lib/lazypivpn/ipnet.sh
 if [[ -z "$(grep 'Start DNS daemon' /etc/rc.local)" ]]; then
 echo "# VPN Protect Link
 /usr/local/sbin/iptables-vpn
-# Start DNS daemon
-/usr/local/sbin/dnsd.rb start" > /tmp/insert.txt
+" > /tmp/insert.txt
 sed -i '$e cat /tmp/insert.txt' /etc/rc.local
 rm /tmp/insert.txt
 fi
+
+# set dnsmasq
+mv /etc/dnsmasq.conf /etc/dnsmasq.conf.original
+echo "no-resolv
+server=1.1.1.1
+server=//192.168.1.1" > /etc/dnsmasq.conf
 
 # set crontab
 crontab -l > /tmp/mycron
