@@ -18,9 +18,9 @@ Why not? I've made this long time ago because none exists years ago, it was a fu
 1. Create Raspbian image and put onto flash card. [instruction](https://www.raspberrypi.org/documentation/installation/installing-images/README.md).
 2. Enter command to RPi `curl https://raw.githubusercontent.com/comomac/lazypivpn/master/install.sh | sudo bash`
 3. Enter command to RPi `sudo fix-ovpn.sh <vpn provider>` replace <vpn_provider> with one of the supported provider below
-4. Edit RPi network interface settings on /etc/dhcpcd.conf
-   a. ip_address=<rpi ip>
-   b. routers=<router ip>
+4. Edit RPi network interface settings at the bottom of /etc/dhcpcd.conf  
+   a. `ip_address=<rpi ip>`  
+   b. `routers=<router ip>`  
 5. Edit VPN username and password /etc/openvpn/client/userpass.txt
 6. Edit network details on /usr/local/lib/lazypivpn/ipnet.sh
 7. Reboot RPi
