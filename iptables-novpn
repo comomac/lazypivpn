@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# disable network forwarding to prevent leak
+echo 0 > /proc/sys/net/ipv4/ip_forward
+
+# get lists of ip/net
+source /usr/local/lib/lazypivpn/ipnet.sh
+
+# flush iptables
+iptables -F
+
+# flush ip route cache
+ip route flush cache
+
+# unroute stacks of ip/net
+for i in $hs; do
+  ip route del $i via $gwip
+done
+
+# restore dns lookup
+sed -i "s/127.0.0.1/$dns_int/" /etc/resolv.conf
+
+exit 0

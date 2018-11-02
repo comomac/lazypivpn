@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+PATH=$PATH:/sbin:/usr/sbin:/usr/local/sbin
+
+# make sure the config exists at /etc/openvpn/client.conf
+if [ -n "$(systemctl status openvpn@client.service | grep 'Active' | grep 'dead' )" ]; then
+  echo 'init vpn'
+  iptables-vpn
+  systemctl start openvpn@client.service
+  exit 1
+fi
+
+# ping ip to make sure internet still working, if down, restart openvpn
+if [ "$(ping -c 4 -W 2 8.8.8.8 | grep loss | awk '{print $6}' )" == "100%" ]; then
+  if [ -n "$(ifconfig|grep tun0)" ]; then
+    echo 'stopping openvpn'
+    systemctl stop openvpn@client.service
+  fi
+
+  echo 'starting openvpn'
+  iptables-vpn
+  systemctl restart openvpn@client.service
+else
+  echo 'everything is good'
+fi
+
+exit 0

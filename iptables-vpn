@@ -1,0 +1,56 @@
+#!/bin/bash
+
+# get lists of ip/net
+source /usr/local/lib/lazypivpn/ipnet.sh
+
+# flush all iptables
+iptables -F
+iptables --table nat -F
+
+# replace dns lookup
+sed -i '/nameserver /d' /etc/resolv.conf
+echo 'nameserver 127.0.0.1' >> /etc/resolv.conf
+
+# flush all old route cache
+ip route flush cache
+
+# access local net, and allow only local to local
+iptables -A INPUT   -s 127.0.0.1 -j ACCEPT
+iptables -A OUTPUT  -s 127.0.0.1 -j ACCEPT
+
+# allow stacks of ip/network
+for i in $hs; do
+  iptables -A INPUT   -s $i -j ACCEPT
+  iptables -A OUTPUT  -d $i -j ACCEPT
+  iptables -A FORWARD -d $i -i $nic_in -o $nic_out -j ACCEPT
+
+  ip route add $i via $gwip
+done
+
+
+
+# enable nat for lan to access vpn through this pc
+iptables --table nat --append POSTROUTING --out-interface tun0 -j MASQUERADE
+
+# prevent leak from nat
+iptables -A FORWARD -i $nic_in -o $nic_out -j DROP
+
+# allow tun to have traffic
+iptables -A INPUT  -i tun+ -j ACCEPT
+iptables -A OUTPUT -o tun+ -j ACCEPT
+
+# accept connection with openvpn
+iptables -A INPUT  -p udp --sport 1194 -j ACCEPT
+iptables -A OUTPUT -p udp --dport 1194 -j ACCEPT
+# openvpn-strong
+iptables -A INPUT  -p udp --sport 1197 -j ACCEPT
+iptables -A OUTPUT -p udp --dport 1197 -j ACCEPT
+
+# drop the rest
+iptables -A INPUT  -j DROP
+iptables -A OUTPUT -j DROP
+
+# allow ip forwarding, done here instead of /etc/sysctl.conf so wont leak when reboot (briefly during boot)
+echo 1 > /proc/sys/net/ipv4/ip_forward
+
+exit 0
