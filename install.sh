@@ -7,7 +7,7 @@ fi
 
 # install necessary bits
 apt-get -y update
-apt-get -y install ruby2.3 ruby2.3-dev openvpn
+apt-get -y install ruby ruby-dev openvpn
 gem install rubydns rake process-daemon envbash
 
 # download codes
