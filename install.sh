@@ -45,7 +45,7 @@ fi
 mv /etc/dnsmasq.conf /etc/dnsmasq.conf.original
 echo "no-resolv
 server=1.1.1.1
-server=//192.168.1.1" > /etc/dnsmasq.conf
+server=/localnet/192.168.1.1" > /etc/dnsmasq.conf
 
 # set crontab
 crontab -l > /tmp/mycron
@@ -53,7 +53,7 @@ if [[ -z "$(grep 'make sure dns' /tmp/mycron)" ]]; then
 echo "# make sure dns is setup immediately
 @reboot /usr/local/sbin/vpn-link-setup > /dev/null 2>&1
 # if vpn is down, reinitiate openvpn
-#* * * * * /usr/local/sbin/vpn-link-setup > /dev/null 2>&1" >> /tmp/mycron
+*/3 * * * * /usr/local/sbin/vpn-link-setup > /dev/null 2>&1" >> /tmp/mycron
 crontab /tmp/mycron
 fi
 rm /tmp/mycron

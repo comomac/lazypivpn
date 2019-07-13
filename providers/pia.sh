@@ -34,7 +34,12 @@ ln -s pia/Hong\ Kong.ovpn client.conf
 ln -s pia/ca.rsa.4096.crt .
 ln -s pia/crl.rsa.4096.pem .
 
+# get lists of ip/net details
+source /usr/local/lib/lazypivpn/ipnet.sh
+
 # set vpn dns bypass for provider
-sed -i -E "s/(export vpn_dns_regex=).+/\1\"(aus-melbourne|aus|brazil|ca|ca-toronto|denmark|fi|france|germany|hk|in|ireland|israel|italy|japan|mexico|nl|nz|no|ro|sg|kr|sweden|swiss|turkey|uk-london|uk-southampton|us-california|us-chicago|us-east|us-florida|us-midwest|us-newyorkcity|us-seattle|us-siliconvalley|us-texas|us-west)\\\.privateinternetaccess\\\.com\"/" /usr/local/lib/lazypivpn/ipnet.sh
+echo "server=/privateinternetaccess.com/$dns_int" >> /etc/dnsmasq.conf
+
+systemctl restart dnsmasq
 
 exit 0

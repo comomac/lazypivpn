@@ -4,8 +4,8 @@
 export gwip="192.168.1.1"
 
 # external dns
-export dns_ext="8.8.8.8" # google dns
-# export dns_ext="1.1.1.1" # cloudflare dns
+#export dns_ext="8.8.8.8" # google dns
+export dns_ext="1.1.1.1" # cloudflare dns
 
 # internal dns, resolve local network name only
 export dns_int="192.168.1.1"
@@ -23,9 +23,6 @@ hs+=" 192.168.0.0/16" # class c, route add may echo    RTNETLINK answers: File e
 #
 # do not edit below unless you know what you are doing
 #
-
-# # vpn gateway server domain that will be queried directly without vpn
-export vpn_dns_regex="null"
 
 # try to find nic
 # it could be eth0, en0, em0, eno0
