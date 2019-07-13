@@ -51,6 +51,11 @@ if [ -n "$(ifconfig eno0 2>/dev/null|grep flags)" ]; then
 export nic_in="eno+"
 export nic_out="eno+"
 fi
+# eno0
+if [ -n "$(ifconfig 2>/dev/null|grep enx|grep flags)" ]; then
+export nic_in="enx+"
+export nic_out="enx+"
+fi
 # catch
 if [ -z "$nic_in" ]; then
 	echo "NIC not found!"
