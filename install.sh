@@ -33,7 +33,7 @@ curl ${XURL}/ipnet.sh > /usr/local/lib/lazypivpn/ipnet.sh
 /usr/local/sbin/setup_nic.sh
 
 # add boot up code
-if [[ -z "$(grep 'Start DNS daemon' /etc/rc.local)" ]]; then
+if [[ -z "$(grep 'VPN Protect Link' /etc/rc.local)" ]]; then
 echo "# VPN Protect Link
 /usr/local/sbin/iptables-vpn
 " > /tmp/insert.txt
